@@ -1,0 +1,175 @@
+{
+  "schema": 1,
+  "catalogUpdated": "2026-10-11",
+  "source": "https://fm1.designburgapps.com/",
+  "notes": "Bundled fallback only; live FM-1 Hub catalog is authoritative. Hardware firmware cannot run as WebAssembly.",
+  "firmwares": [
+    {
+      "id": "zp12",
+      "name": "zp12",
+      "author": "zvenson",
+      "repo": "zvenson/zp12",
+      "version": "2.3",
+      "kind": "drums",
+      "what": "A standalone 12-bit sampler inspired by the E-mu SP-1200: sample in the browser (mic, line-in or a file), unplug, and the FM-1 plays on its own: nothing smoothed, loops and songs.",
+      "source": "https://github.com/zvenson/zp12",
+      "release": "https://zp12.designburgapps.com",
+      "editor": "https://zp12.designburgapps.com/editor/",
+      "play": null,
+      "browserBuild": false
+    },
+    {
+      "id": "felucca",
+      "name": "Felucca",
+      "kind": "open-source",
+      "source": "https://github.com/hugelton/Felucca",
+      "hub": "https://fm1.designburgapps.com/",
+      "browserBuild": false,
+      "description": "Browser build required before this firmware can run in the Lab."
+    },
+    {
+      "id": "felucca-salt",
+      "name": "Felucca [Salt]",
+      "kind": "open-source",
+      "source": null,
+      "hub": "https://fm1.designburgapps.com/",
+      "browserBuild": false,
+      "description": "Browser build required before this firmware can run in the Lab."
+    },
+    {
+      "id": "sloop",
+      "name": "SLOOP",
+      "kind": "open-source",
+      "source": "https://github.com/isod89/sloop-fm1",
+      "hub": "https://fm1.designburgapps.com/",
+      "browserBuild": false,
+      "description": "Browser build required before this firmware can run in the Lab."
+    },
+    {
+      "id": "sloopdx",
+      "name": "sloopDX",
+      "kind": "open-source",
+      "source": null,
+      "hub": "https://fm1.designburgapps.com/",
+      "browserBuild": false,
+      "description": "Browser build required before this firmware can run in the Lab."
+    },
+    {
+      "id": "x0x",
+      "name": "FM1-X0X",
+      "kind": "open-source",
+      "source": "https://github.com/charlesvestal/fm1-x0x",
+      "hub": "https://fm1.designburgapps.com/",
+      "browserBuild": false,
+      "description": "Browser build required before this firmware can run in the Lab."
+    },
+    {
+      "id": "fomni",
+      "name": "FoMni",
+      "kind": "open-source",
+      "source": null,
+      "hub": "https://fm1.designburgapps.com/",
+      "browserBuild": false,
+      "description": "Browser build required before this firmware can run in the Lab."
+    },
+    {
+      "id": "choralroot",
+      "name": "ChoralRoot",
+      "kind": "open-source",
+      "source": null,
+      "hub": "https://fm1.designburgapps.com/",
+      "browserBuild": false,
+      "description": "Browser build required before this firmware can run in the Lab."
+    },
+    {
+      "id": "jangada",
+      "name": "Jangada",
+      "kind": "open-source",
+      "source": null,
+      "hub": "https://fm1.designburgapps.com/",
+      "browserBuild": false,
+      "description": "Browser build required before this firmware can run in the Lab."
+    },
+    {
+      "id": "melodee",
+      "name": "Melodee",
+      "kind": "open-source",
+      "source": null,
+      "hub": "https://fm1.designburgapps.com/",
+      "browserBuild": false,
+      "description": "Browser build required before this firmware can run in the Lab."
+    },
+    {
+      "id": "hortator",
+      "name": "Hortator",
+      "kind": "open-source",
+      "source": null,
+      "hub": "https://fm1.designburgapps.com/",
+      "browserBuild": false,
+      "description": "Browser build required before this firmware can run in the Lab."
+    },
+    {
+      "id": "fimba1",
+      "name": "FiMba-1",
+      "kind": "open-source",
+      "source": null,
+      "hub": "https://fm1.designburgapps.com/",
+      "browserBuild": false,
+      "description": "Browser build required before this firmware can run in the Lab."
+    },
+    {
+      "id": "ghoulbox",
+      "name": "GHOULBOX",
+      "kind": "open-source",
+      "source": null,
+      "hub": "https://fm1.designburgapps.com/",
+      "browserBuild": false,
+      "description": "Browser build required before this firmware can run in the Lab."
+    },
+    {
+      "id": "sloop-floyd-fm",
+      "name": "SLOOP Floyd FM",
+      "kind": "open-source",
+      "source": null,
+      "hub": "https://fm1.designburgapps.com/",
+      "browserBuild": false,
+      "description": "Browser build required before this firmware can run in the Lab."
+    },
+    {
+      "id": "sloop-dx7-banks",
+      "name": "SLOOP DX7 Banks",
+      "kind": "open-source",
+      "source": null,
+      "hub": "https://fm1.designburgapps.com/",
+      "browserBuild": false,
+      "description": "Browser build required before this firmware can run in the Lab."
+    },
+    {
+      "id": "waveloop",
+      "name": "WaveLoop",
+      "kind": "open-source",
+      "source": null,
+      "hub": "https://fm1.designburgapps.com/",
+      "browserBuild": false,
+      "description": "Browser build required before this firmware can run in the Lab."
+    },
+    {
+      "id": "jiant-fm",
+      "name": "JIANT FM",
+      "kind": "open-source",
+      "source": null,
+      "hub": "https://fm1.designburgapps.com/",
+      "browserBuild": false,
+      "description": "Browser build required before this firmware can run in the Lab."
+    },
+    {
+      "id": "official",
+      "name": "M-VAVE FM-1 Official V15",
+      "kind": "official-hardware",
+      "source": "https://www.m-vave.com",
+      "hub": "https://fm1.designburgapps.com/",
+      "browserBuild": false,
+      "description": "Official hardware firmware; no public browser/WASM emulator verified."
+    }
+  ]
+}

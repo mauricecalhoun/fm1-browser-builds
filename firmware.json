@@ -1,0 +1,18 @@
+{
+  "firmwares": [
+    {
+      "id": "sloop",
+      "name": "SLOOP",
+      "description": "Original firmware running in the existing FM-1 panel",
+      "entry": "firmware/sloop/index.html",
+      "ready": false
+    },
+    {
+      "id": "felucca",
+      "name": "Felucca",
+      "description": "Original firmware running in the existing FM-1 panel",
+      "entry": "firmware/felucca/index.html",
+      "ready": false
+    }
+  ]
+}
