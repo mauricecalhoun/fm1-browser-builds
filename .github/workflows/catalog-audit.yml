@@ -1,0 +1,22 @@
+name: Audit all FM-1 firmware browser builds
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '11 9 * * *'
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inventory all firmware and published browser builds
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BUILD_REPO: ${{ github.repository }}
+        run: python3 tools/audit_catalog.py
+      - name: Upload full firmware compatibility report
+        uses: actions/upload-artifact@v4
+        with:
+          name: fm1-browser-compatibility
+          path: dist/compatibility.json
