@@ -12,7 +12,7 @@ import os
 
 CATALOG_URL = 'https://fm1.designburgapps.com/catalog.json'
 # GitHub repo containing browser-build releases, e.g. yourname/fm1-browser-builds.
-BUILD_REPO = os.environ.get('FM1_BROWSER_BUILD_REPO', '').strip()
+BUILD_REPO = os.environ.get('FM1_BROWSER_BUILD_REPO', 'mauricecalhoun/fm1-browser-builds').strip()
 def github_repo(firmware_id):
     # Only repos advertised by the live Hub; no arbitrary URL proxy.
     if not re.fullmatch(r'[a-zA-Z0-9_-]{1,64}', firmware_id):
@@ -50,7 +50,7 @@ class Handler(SimpleHTTPRequestHandler):
                 checksum=next((a for a in assets if a.get('name')==pkg['name']+'.sha256'),None)
                 if checksum:
                     return {'available':True,'repo':repo,'version':release.get('tag_name',''), 'package_asset_id':pkg['id'],'checksum_asset_id':checksum['id'],'size':pkg.get('size',0)}
-        return {'available':False,'repo':repo,'reason':'No published browser build for this firmware yet. Hardware .fwsc images cannot run in the emulator.'}
+        return {'available':False,'repo':repo,'reason':'Browser port needed: no compatible package published for this firmware. Hardware .fwsc images cannot run in Safari.'}
     def github_asset(self,firmware_id,asset_id,limit):
         info=self.github_release(firmware_id)
         repo=info['repo']

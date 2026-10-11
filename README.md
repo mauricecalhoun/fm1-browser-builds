@@ -34,3 +34,14 @@ node --check js/repo-install.js
 ```
 
 Use the same `http://localhost:8000` origin to preserve IndexedDB installs and saved projects. Do not clear site data.
+
+
+## v1.1: Whole-catalog pipeline
+
+- All entries in the Firmware Hub catalog are audited in a **single** scheduled GitHub Actions job (`catalog-audit.yml`). Download its `fm1-browser-compatibility` artifact to see which have published browser engines and which need ports.
+- The existing Felucca build runs daily against the author's latest source and publishes a new immutable release when the source commit changes.
+- The Lab's **Install** button now checks for a published browser engine and, when found, verifies and installs it in one click.
+- `browser-build-matrix.json` records readiness of the bundled catalog; it is **not** a promise that all firmware compiles to WASM. Other engines, including SLOOP, still require tested CI build recipes.
+- Install from the author's source through our release cache: `FM1_BROWSER_BUILD_REPO=mauricecalhoun/fm1-browser-builds python3 server.py`.
+
+**Limitation:** GitHub Actions jobs and Safari runtime must still be tested for this revision. The catalog audit tracks all firmware; it does not build unported firmware.

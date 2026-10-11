@@ -1,0 +1,114 @@
+{
+  "schema": 1,
+  "note": "Each firmware is tracked. Only firmware with a validated browser port can be built. No hardware firmware is executable in Safari.",
+  "builds": [
+    {
+      "id": "zp12",
+      "status": "browser_port_needed",
+      "source": "zvenson/zp12",
+      "notes": "Requires browser engine port and build recipe"
+    },
+    {
+      "id": "felucca",
+      "status": "automated",
+      "source": null,
+      "notes": "Validated Felucca WASM CI build"
+    },
+    {
+      "id": "felucca-salt",
+      "status": "browser_port_needed",
+      "source": null,
+      "notes": "Requires browser engine port and build recipe"
+    },
+    {
+      "id": "sloop",
+      "status": "browser_port_needed",
+      "source": null,
+      "notes": "Requires browser engine port and build recipe"
+    },
+    {
+      "id": "sloopdx",
+      "status": "browser_port_needed",
+      "source": null,
+      "notes": "Requires browser engine port and build recipe"
+    },
+    {
+      "id": "x0x",
+      "status": "browser_port_needed",
+      "source": null,
+      "notes": "Requires browser engine port and build recipe"
+    },
+    {
+      "id": "fomni",
+      "status": "browser_port_needed",
+      "source": null,
+      "notes": "Requires browser engine port and build recipe"
+    },
+    {
+      "id": "choralroot",
+      "status": "browser_port_needed",
+      "source": null,
+      "notes": "Requires browser engine port and build recipe"
+    },
+    {
+      "id": "jangada",
+      "status": "browser_port_needed",
+      "source": null,
+      "notes": "Requires browser engine port and build recipe"
+    },
+    {
+      "id": "melodee",
+      "status": "browser_port_needed",
+      "source": null,
+      "notes": "Requires browser engine port and build recipe"
+    },
+    {
+      "id": "hortator",
+      "status": "browser_port_needed",
+      "source": null,
+      "notes": "Requires browser engine port and build recipe"
+    },
+    {
+      "id": "fimba1",
+      "status": "browser_port_needed",
+      "source": null,
+      "notes": "Requires browser engine port and build recipe"
+    },
+    {
+      "id": "ghoulbox",
+      "status": "browser_port_needed",
+      "source": null,
+      "notes": "Requires browser engine port and build recipe"
+    },
+    {
+      "id": "sloop-floyd-fm",
+      "status": "browser_port_needed",
+      "source": null,
+      "notes": "Requires browser engine port and build recipe"
+    },
+    {
+      "id": "sloop-dx7-banks",
+      "status": "browser_port_needed",
+      "source": null,
+      "notes": "Requires browser engine port and build recipe"
+    },
+    {
+      "id": "waveloop",
+      "status": "browser_port_needed",
+      "source": null,
+      "notes": "Requires browser engine port and build recipe"
+    },
+    {
+      "id": "jiant-fm",
+      "status": "browser_port_needed",
+      "source": null,
+      "notes": "Requires browser engine port and build recipe"
+    },
+    {
+      "id": "official",
+      "status": "browser_port_needed",
+      "source": null,
+      "notes": "Requires browser engine port and build recipe"
+    }
+  ]
+}
