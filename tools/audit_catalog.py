@@ -11,6 +11,7 @@ def get(url):
     with urllib.request.urlopen(urllib.request.Request(url,headers=headers),timeout=30) as r:return json.load(r)
 items=get(hub)['firmwares']
 releases=get('https://api.github.com/repos/'+repo+'/releases?per_page=100')
+supported={'felucca':'upstream-felucca','sloop':'bundled-sloop-port'}
 report=[]
 for f in items:
     fid=f['id'];found=None
@@ -19,7 +20,7 @@ for f in items:
         names={a['name'] for a in r.get('assets',[])}
         if fid+'.fm1pkg' in names and fid+'.fm1pkg.sha256' in names:
             found={'tag':r['tag_name'],'url':r['html_url']};break
-    report.append({'id':fid,'name':f.get('name',fid),'upstream':f.get('repo'), 'status':'published' if found else 'browser_port_needed', 'browser_release':found})
+    report.append({'id':fid,'name':f.get('name',fid),'upstream':f.get('repo'), 'status':'published' if found else ('build_not_published' if fid in supported else 'browser_port_needed'), 'recipe':supported.get(fid), 'browser_release':found})
 path=pathlib.Path('dist/compatibility.json');path.parent.mkdir(exist_ok=True)
 path.write_text(json.dumps({'generated_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'build_repo':repo,'firmwares':report},indent=2)+'\n')
 print('Catalog entries:',len(report),'Published browser builds:',sum(x['status']=='published' for x in report))

@@ -11,7 +11,7 @@
     {
       "id": "felucca",
       "status": "automated",
-      "source": null,
+      "source": "hugelton/Felucca",
       "notes": "Validated Felucca WASM CI build"
     },
     {
@@ -22,9 +22,9 @@
     },
     {
       "id": "sloop",
-      "status": "browser_port_needed",
-      "source": null,
-      "notes": "Requires browser engine port and build recipe"
+      "status": "automated",
+      "source": "isod89/sloop-fm1",
+      "notes": "Builds bundled v0.5 browser port; not upstream hardware firmware"
     },
     {
       "id": "sloopdx",

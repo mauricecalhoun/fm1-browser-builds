@@ -1,0 +1,70 @@
+name: Build all supported FM-1 browser engines
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '37 8 * * *'
+permissions:
+  contents: write
+jobs:
+  browser-builds:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - id: felucca
+            name: Felucca
+            recipe: upstream-felucca
+            source: hugelton/Felucca
+          - id: sloop
+            name: SLOOP
+            recipe: bundled-sloop-port
+            source: isod89/sloop-fm1
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Python dependencies
+        run: python3 -m pip install --break-system-packages Pillow fonttools
+      - name: Install Emscripten
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: '4.0.10'
+      - name: Build and package browser engine
+        id: build
+        env:
+          ENGINE_ID: ${{ matrix.id }}
+          ENGINE_NAME: ${{ matrix.name }}
+          RECIPE: ${{ matrix.recipe }}
+          UPSTREAM_REPO: ${{ matrix.source }}
+        run: bash tools/ci_build_engine.sh
+      - name: Publish immutable release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ENGINE_ID: ${{ matrix.id }}
+          ENGINE_REV: ${{ steps.build.outputs.rev }}
+          UPSTREAM_REPO: ${{ matrix.source }}
+          RECIPE: ${{ matrix.recipe }}
+        run: |
+          set -euo pipefail
+          TAG="${ENGINE_ID}-web-${ENGINE_REV}"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Already published $TAG"
+          else
+            gh release create "$TAG" "dist/${ENGINE_ID}.fm1pkg" "dist/${ENGINE_ID}.fm1pkg.sha256" \
+              --title "${ENGINE_ID} browser ${ENGINE_REV}" \
+              --notes "Browser engine build, recipe ${RECIPE}; upstream ${UPSTREAM_REPO}. Not hardware firmware."
+          fi
+  audit:
+    needs: [browser-builds]
+    if: always()
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Audit published builds and configured recipes
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BUILD_REPO: ${{ github.repository }}
+        run: python3 tools/audit_catalog.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fm1-browser-compatibility
+          path: dist/compatibility.json

@@ -45,3 +45,13 @@ Use the same `http://localhost:8000` origin to preserve IndexedDB installs and s
 - Install from the author's source through our release cache: `FM1_BROWSER_BUILD_REPO=mauricecalhoun/fm1-browser-builds python3 server.py`.
 
 **Limitation:** GitHub Actions jobs and Safari runtime must still be tested for this revision. The catalog audit tracks all firmware; it does not build unported firmware.
+
+## v1.2 — matrix builds for supported engines
+
+The single workflow `.github/workflows/build-all-browser-engines.yml` builds **Felucca** from `hugelton/Felucca` and **SLOOP** from the included, previously developed v0.5 browser-port source archive. It publishes immutable `.fm1pkg` + `.sha256` assets under distinct release tags, then audits the complete live catalog. The other 20 entries remain audited, **not built**, until a compatible browser port is validated.
+
+**IMPORTANT:** The SLOOP port is a modified source snapshot, not a direct compilation of the current `isod89/sloop-fm1` upstream hardware code. The archive is included under `ports/` so CI has the actual browser port without external setup. Check its licensing before redistributing. The SLOOP CI build is not yet verified on GitHub; inspect logs if it fails.
+
+**GitHub update:** Copy the entire v1.2 project into the existing `fm1-browser-builds` repository, including hidden `.github` and `ports/` directories. Delete the old `.github/workflows/build-felucca.yml` to avoid duplicate builds; retain `catalog-audit.yml` if you want a separate manual audit. Commit/push, then Actions → **Build all supported FM-1 browser engines** → Run workflow. Both build matrix jobs run independently. The final audit artifact reports catalog-wide status.
+
+**Local Lab:** `FM1_BROWSER_BUILD_REPO=mauricecalhoun/fm1-browser-builds python3 server.py` then Safari `http://localhost:8000`. Existing IndexedDB installations persist on the same origin.
