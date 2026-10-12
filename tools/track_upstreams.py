@@ -8,11 +8,14 @@ def get(url):
     with urllib.request.urlopen(urllib.request.Request(url,headers=headers),timeout=25) as r:return json.load(r)
 items=get('https://fm1.designburgapps.com/catalog.json')['firmwares']
 releases=get('https://api.github.com/repos/'+repo+'/releases?per_page=100')
+registry=json.loads(pathlib.Path('recipes.json').read_text())
+supported={x['id']:x for x in registry['recipes'] if x['state']=='enabled'}
+candidates={x['id']:x['family'] for x in registry['candidates']}
 results=[]
 for item in items:
     fid=item['id'];upstream=item.get('repo');record={'id':fid,'upstream':upstream,'head':None,'published_revision':None,'recipe':None,'status':'port_needed'}
-    if fid=='felucca':record['recipe']='upstream-felucca'
-    elif fid=='sloop':record['recipe']='bundled-sloop-port'
+    if fid in supported:record['recipe']=supported[fid]['recipe']
+    if fid in candidates:record['candidate_family']=candidates[fid]
     for rel in releases:
         names={a.get('name') for a in rel.get('assets',[])}
         if not rel.get('draft') and not rel.get('prerelease') and {fid+'.fm1pkg',fid+'.fm1pkg.sha256'}<=names:

@@ -1,18 +1,26 @@
-# FM-1 Firmware Lab v1.3 — Upstream tracking and automatic install/update states
+# FM-1 Firmware Lab v1.4 — Declarative browser build recipes
 
-Builds for Felucca and SLOOP remain as in v1.2. The existing daily matrix workflow continues to build supported engines; immutable release tags avoid republishing unchanged revisions.
+This release replaces the hard-coded GitHub Actions build matrix with `recipes.json`.
 
-## New
+## What is actually supported
+- Felucca: **enabled**, built from the original upstream source.
+- SLOOP: **enabled**, built from the bundled v0.5 browser-port snapshot (not auto-synced to upstream).
+- Salt, WaveLoop, Rainbow: **candidate Felucca family**, not yet validated or installable.
+- Floyd FM, SLOOP DX7 Banks, SLOOP DX: **candidate SLOOP family**, not yet validated or installable.
+- Other catalog entries: tracked/audited, no browser recipe yet.
 
-- `track-upstreams.yml` audits all live catalog entries daily or on demand. It records upstream default-branch HEAD and published browser revision, with an artifact `fm1-upstream-tracking`.
-- **Important:** only Felucca currently builds from upstream source; its revision can be compared to upstream HEAD. SLOOP builds from a bundled browser-port snapshot; changes to the SLOOP hardware repo do not imply that the port was updated.
-- Safari install button automatically checks for releases when selection changes and shows Install / Update / Installed · current / Browser port needed. Package integrity verification remains required.
-- Version label and source/release metadata updated.
+**No new browser ports are claimed in v1.4.** Family similarity is a hypothesis requiring actual source review, adaptation, and Safari validation. This release is the reusable recipe infrastructure, not an automatic firmware-to-WASM converter.
 
 ## Deploy
+Copy the entire extracted project, including `.github`, into your existing `fm1-browser-builds` clone, commit and push. Do not remove existing GitHub releases.
 
-Copy all files (including hidden `.github/`) into your existing `fm1-browser-builds` clone, commit and push. In Actions, run **Track all FM-1 upstream repositories**. Run `python3 server.py` and open `http://localhost:8000` in Safari. Preserve the origin/port to retain IndexedDB installs.
+```bash
+python3 tools/recipe_matrix.py --validate
+python3 tools/recipe_matrix.py
+```
 
-## Limitations
+Run **Build all supported FM-1 browser engines** under GitHub Actions. It reads the matrix dynamically from `recipes.json`, builds both enabled engines, and produces `fm1-browser-compatibility`. Run **Track all FM-1 upstream repositories** to see candidate family metadata in the tracking report.
 
-No new firmware engines are ported in v1.3. The tracker is a status report, not an automatic compatibility converter. GitHub rate limits can affect auditing 22 repositories. Safari runtime regression tests are not yet automated. Build jobs are not triggered directly by the tracking workflow; the existing daily build schedule handles upstream Felucca changes.
+To enable a new recipe, first implement a compatible build handler in `tools/ci_build_engine.sh`, validate its browser output, then add an enabled recipe to `recipes.json`. Candidate entries are intentionally excluded from the build matrix.
+
+Run the local UI with `python3 server.py`, open `http://localhost:8000` in Safari. Existing IndexedDB installations are preserved when origin and port stay the same.

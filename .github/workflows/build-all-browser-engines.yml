@@ -6,19 +6,22 @@ on:
 permissions:
   contents: write
 jobs:
+  prepare:
+    runs-on: ubuntu-24.04
+    outputs:
+      matrix: ${{ steps.recipes.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate recipes and create matrix
+        id: recipes
+        run: |
+          python3 tools/recipe_matrix.py --validate
+          echo "matrix=$(python3 tools/recipe_matrix.py)" >> "$GITHUB_OUTPUT"
   browser-builds:
+    needs: [prepare]
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - id: felucca
-            name: Felucca
-            recipe: upstream-felucca
-            source: hugelton/Felucca
-          - id: sloop
-            name: SLOOP
-            recipe: bundled-sloop-port
-            source: isod89/sloop-fm1
+      matrix: ${{ fromJSON(needs.prepare.outputs.matrix) }}
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -54,7 +57,7 @@ jobs:
               --notes "Browser engine build, recipe ${RECIPE}; upstream ${UPSTREAM_REPO}. Not hardware firmware."
           fi
   audit:
-    needs: [browser-builds]
+    needs: [prepare, browser-builds]
     if: always()
     runs-on: ubuntu-24.04
     steps:

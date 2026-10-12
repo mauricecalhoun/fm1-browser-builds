@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "description": "Only validated browser recipes are enabled. Candidate families require source review and browser-port validation.",
+  "recipes": [
+    {
+      "id": "felucca",
+      "name": "Felucca",
+      "family": "felucca",
+      "upstream": "hugelton/Felucca",
+      "recipe": "upstream-felucca",
+      "state": "enabled",
+      "provenance": "upstream-source"
+    },
+    {
+      "id": "sloop",
+      "name": "SLOOP",
+      "family": "sloop",
+      "upstream": "isod89/sloop-fm1",
+      "recipe": "bundled-sloop-port",
+      "state": "enabled",
+      "provenance": "bundled-browser-port"
+    }
+  ],
+  "candidates": [
+    {
+      "id": "salt",
+      "family": "felucca",
+      "state": "evaluation_needed",
+      "notes": "Source/API compatibility and independent browser runtime validation required; no build recipe enabled."
+    },
+    {
+      "id": "waveloop",
+      "family": "felucca",
+      "state": "evaluation_needed",
+      "notes": "Source/API compatibility and independent browser runtime validation required; no build recipe enabled."
+    },
+    {
+      "id": "rainbow",
+      "family": "felucca",
+      "state": "evaluation_needed",
+      "notes": "Source/API compatibility and independent browser runtime validation required; no build recipe enabled."
+    },
+    {
+      "id": "floyd",
+      "family": "sloop",
+      "state": "evaluation_needed",
+      "notes": "Source/API compatibility and independent browser runtime validation required; no build recipe enabled."
+    },
+    {
+      "id": "sloopbanks",
+      "family": "sloop",
+      "state": "evaluation_needed",
+      "notes": "Source/API compatibility and independent browser runtime validation required; no build recipe enabled."
+    },
+    {
+      "id": "sloopdx",
+      "family": "sloop",
+      "state": "evaluation_needed",
+      "notes": "Source/API compatibility and independent browser runtime validation required; no build recipe enabled."
+    }
+  ]
+}
