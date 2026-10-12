@@ -1,0 +1,28 @@
+name: Audit all FM-1 firmware sources
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '11 10 * * 2'
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Validate recipe registry
+        run: python3 tools/recipe_matrix.py --validate
+      - name: Inspect all firmware repositories (read-only)
+        run: python3 tools/audit_all_sources.py
+      - name: Upload audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fm1-all-firmware-source-audit
+          path: |
+            dist/all-firmware-audit.json
+            dist/all-firmware-audit.md
+          if-no-files-found: error

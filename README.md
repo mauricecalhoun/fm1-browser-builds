@@ -21,3 +21,13 @@ Run `python3 server.py` and open `http://localhost:8000`. Select Rainbow Mode or
 
 ## Known limits
 The two builds were compilation-tested by GitHub Actions, not by Safari. `compiled_unverified` does not prove sound output or functional equivalence. The other four candidate variants remain disabled. The Lab uses a bundled fallback catalog; if the live catalog has different IDs for these entries, installation lookup may need mapping.
+
+
+## v1.7 — All firmware source audit
+
+GitHub Actions → **Audit all FM-1 firmware sources** → **Run workflow**.
+The workflow checks all entries in the live firmware catalog, preserves the four existing recipes, and performs **read-only source inspection** of the remaining projects. Download `fm1-all-firmware-source-audit` (JSON and Markdown) from the run artifacts.
+
+Classification: `browser_build_detected` means a known browser build layout exists (not compiled or tested); `family_adapter_review` means a family-specific port may be reusable (not confirmed); `new_browser_port_required` means no known family adapter; `source_unavailable` means the clone failed.
+
+This workflow does not execute upstream build scripts, publish packages, or change existing playable engines. The source-audit step requires internet access and can fail if upstream repositories are unavailable.
