@@ -1,0 +1,27 @@
+name: Probe all 11 remaining FM-1 engines
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'tools/probe_remaining.py'
+      - '.github/workflows/probe-remaining-11.yml'
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Inspect all eleven upstream repositories
+        run: python3 tools/probe_remaining.py remaining-11-report.json
+      - name: Upload inspection results even on partial failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: remaining-11-report
+          path: remaining-11-report.json
+          if-no-files-found: warn
