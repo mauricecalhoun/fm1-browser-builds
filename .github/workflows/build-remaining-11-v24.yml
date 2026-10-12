@@ -1,0 +1,44 @@
+name: Build remaining 11 FM-1 browser candidates (v2.4)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        id: [salt, floyd, sloopbanks, sloopdx, zp12, hortator, jangada, melodee, choralroot, dinghy, chord]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install compiler dependencies
+        run: |
+          python3 -m pip install --break-system-packages Pillow fonttools
+      - name: Install Emscripten
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: '4.0.10'
+      - name: Attempt native browser build and package
+        shell: bash
+        run: |
+          set +e
+          python3 tools/build_remaining_v24.py --id '${{ matrix.id }}' --out 'dist/v24/${{ matrix.id }}'
+          status=$?
+          if [ "$status" -ne 0 ]; then
+            mkdir -p 'dist/v24/${{ matrix.id }}'
+            echo "Probe crashed with exit $status" > 'dist/v24/${{ matrix.id }}/runner-error.txt'
+          fi
+          exit 0
+      - name: Upload logs and experimental packages
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v24-${{ matrix.id }}
+          path: |
+            dist/v24/${{ matrix.id }}/result.json
+            dist/v24/${{ matrix.id }}/*.log
+            dist/v24/${{ matrix.id }}/*.fm1pkg
+            dist/v24/${{ matrix.id }}/runner-error.txt
+          if-no-files-found: warn
