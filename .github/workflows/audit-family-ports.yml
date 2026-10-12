@@ -1,0 +1,24 @@
+name: Audit four FM-1 family ports
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'tools/audit_family_ports.py'
+      - '.github/workflows/audit-family-ports.yml'
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect four upstream firmware source trees
+        run: python3 tools/audit_family_ports.py reports/family-port-audit.json
+      - name: Upload audit regardless of candidate errors
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fm1-family-port-audit
+          path: reports/family-port-audit.json
+          if-no-files-found: warn
