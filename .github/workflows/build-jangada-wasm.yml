@@ -1,0 +1,44 @@
+name: Build Jangada firmware DSP for Safari
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/build-jangada-wasm.yml'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Checkout pinned Jangada source
+        run: |
+          git clone https://github.com/zednaked/jangada.git upstream
+          git -C upstream checkout db41fd9845af6c8ebfbc348dafc33d98ef83a27d
+      - name: Install Zig 0.14.1
+        run: |
+          python3 upstream/tools/build_studio.py --get-zig
+          "$HOME/.local/bin/zig" version
+      - name: Build native Jangada DSP to WebAssembly
+        run: |
+          cd upstream
+          python3 tools/build_studio.py --zig "$HOME/.local/bin/zig" --out web/studio/engine.wasm --native
+      - name: Test browser/native DSP consistency
+        run: |
+          cd upstream
+          node web/test_studio.mjs
+      - name: Validate and package browser DSP
+        run: |
+          test -s upstream/web/studio/engine.wasm
+          test -s upstream/web/studio/worklet.js
+          test -s upstream/web/studio/index.html
+          mkdir -p dist/jangada
+          cp upstream/web/studio/{engine.wasm,worklet.js,index.html} dist/jangada/
+          (cd dist && zip -r jangada-studio-wasm.zip jangada)
+          sha256sum dist/jangada/engine.wasm > dist/engine.wasm.sha256
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: jangada-wasm-build
+          path: dist/
+          if-no-files-found: warn
