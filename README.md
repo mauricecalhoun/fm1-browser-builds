@@ -1,43 +1,23 @@
-## v1.5.1 — candidate probe fix
+# FM-1 Firmware Lab v1.6 — experimental Rainbow and WaveLoop browser packages
 
-Fixed candidate lookup: recipes.json now carries upstream repository names for all six candidate IDs, instead of looking up mismatched IDs in the 18-entry bundled catalog. Missing probe artifacts now fail the workflow and incomplete reports fail validation. No candidate packages are published by this evaluation.
-
-# FM-1 Firmware Lab v1.5 — Candidate compatibility probes
-
-This release adds `.github/workflows/evaluate-candidates.yml` and `tools/probe_candidate.py`. Existing Felucca and SLOOP publishing workflows and UI remain unchanged.
-
-**What it does:** Checks out all six candidate upstream repositories, records source SHA and expected browser build layout. For manual runs with compile probes enabled, attempts to generate and compile browser assets only when compatible build entrypoints exist. It captures logs and reports `needs_adaptation`, `build_failed`, or `compiled_unverified`.
-
-**Security:** The workflow executes third-party source scripts when compilation is enabled. It runs on GitHub-hosted disposable runners with read-only repository permissions, checkout credentials disabled, and no application secrets supplied. Review upstream sources before enabling probes for untrusted repositories. Scheduled runs perform static inspection only.
-
-**Important:** Even `compiled_unverified` means *not yet installable*. This workflow does not publish any release or alter enabled recipes. Browser runtime/Safari testing is still required.
+The compatibility probes compiled **Rainbow Mode** and **WaveLoop FM-1** from their original source repositories. This version adds their `upstream-felucca` build recipes to the shared GitHub Actions matrix. Their release notes explicitly identify them as **experimental / Safari unverified**. The existing Felucca and SLOOP recipes are unchanged.
 
 ## Deploy
-Copy the project files (including hidden `.github`) to your existing `fm1-browser-builds` clone, commit and push. Run **Evaluate FM-1 firmware family candidates** from Actions. After completion download `fm1-candidate-compatibility` artifact and share the JSON report.
-
-# FM-1 Firmware Lab v1.4 — Declarative browser build recipes
-
-This release replaces the hard-coded GitHub Actions build matrix with `recipes.json`.
-
-## What is actually supported
-- Felucca: **enabled**, built from the original upstream source.
-- SLOOP: **enabled**, built from the bundled v0.5 browser-port snapshot (not auto-synced to upstream).
-- Salt, WaveLoop, Rainbow: **candidate Felucca family**, not yet validated or installable.
-- Floyd FM, SLOOP DX7 Banks, SLOOP DX: **candidate SLOOP family**, not yet validated or installable.
-- Other catalog entries: tracked/audited, no browser recipe yet.
-
-**No new browser ports are claimed in v1.4.** Family similarity is a hypothesis requiring actual source review, adaptation, and Safari validation. This release is the reusable recipe infrastructure, not an automatic firmware-to-WASM converter.
-
-## Deploy
-Copy the entire extracted project, including `.github`, into your existing `fm1-browser-builds` clone, commit and push. Do not remove existing GitHub releases.
+Copy this project (including `.github`) into your existing `fm1-browser-builds` clone. Run:
 
 ```bash
 python3 tools/recipe_matrix.py --validate
-python3 tools/recipe_matrix.py
+git add -A
+git commit -m "Build experimental Rainbow and WaveLoop browser packages"
+git push origin main
 ```
 
-Run **Build all supported FM-1 browser engines** under GitHub Actions. It reads the matrix dynamically from `recipes.json`, builds both enabled engines, and produces `fm1-browser-compatibility`. Run **Track all FM-1 upstream repositories** to see candidate family metadata in the tracking report.
+Run **Build all supported FM-1 browser engines** under GitHub Actions. It should attempt Felucca, SLOOP, Rainbow, and WaveLoop. Inspect the jobs; only successful builds will publish packages. Download the updated compatibility report.
 
-To enable a new recipe, first implement a compatible build handler in `tools/ci_build_engine.sh`, validate its browser output, then add an enabled recipe to `recipes.json`. Candidate entries are intentionally excluded from the build matrix.
+## Safari test
+Run `python3 server.py` and open `http://localhost:8000`. Select Rainbow Mode or WaveLoop FM-1, then Install and Play in Lab. Verify UI launches, controls respond, audio is produced, and there are no console errors. Installation does not establish behavioral parity with hardware firmware.
 
-Run the local UI with `python3 server.py`, open `http://localhost:8000` in Safari. Existing IndexedDB installations are preserved when origin and port stay the same.
+**Do not describe these two engines as Safari validated until you've tested them.** Releases are intentionally discoverable by the existing installer; release notes flag them experimental. No upstream changes are pushed back to authors' repositories.
+
+## Known limits
+The two builds were compilation-tested by GitHub Actions, not by Safari. `compiled_unverified` does not prove sound output or functional equivalence. The other four candidate variants remain disabled. The Lab uses a bundled fallback catalog; if the live catalog has different IDs for these entries, installation lookup may need mapping.

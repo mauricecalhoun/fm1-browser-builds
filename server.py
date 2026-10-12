@@ -49,7 +49,7 @@ class Handler(SimpleHTTPRequestHandler):
             for pkg in packages:
                 checksum=next((a for a in assets if a.get('name')==pkg['name']+'.sha256'),None)
                 if checksum:
-                    return {'available':True,'repo':repo,'version':release.get('tag_name',''), 'published_at':release.get('published_at'), 'release_url':release.get('html_url'), 'recipe':('upstream-felucca' if firmware_id=='felucca' else 'bundled-sloop-port' if firmware_id=='sloop' else 'unknown'), 'upstream':upstream, 'package_asset_id':pkg['id'],'checksum_asset_id':checksum['id'],'size':pkg.get('size',0)}
+                    return {'available':True,'repo':repo,'version':release.get('tag_name',''), 'published_at':release.get('published_at'), 'release_url':release.get('html_url'), 'recipe':('upstream-felucca' if firmware_id in ('felucca','rainbow','waveloop') else 'bundled-sloop-port' if firmware_id=='sloop' else 'unknown'), 'experimental': firmware_id in ('rainbow','waveloop'), 'upstream':upstream, 'package_asset_id':pkg['id'],'checksum_asset_id':checksum['id'],'size':pkg.get('size',0)}
         return {'available':False,'repo':repo,'reason':'Browser port needed: no compatible package published for this firmware. Hardware .fwsc images cannot run in Safari.'}
     def github_asset(self,firmware_id,asset_id,limit):
         info=self.github_release(firmware_id)

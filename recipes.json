@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "description": "Only validated browser recipes are enabled. Candidate families require source review and browser-port validation.",
+  "description": "Validated engines and opt-in experimental browser builds. Experimental builds require Safari testing.",
   "recipes": [
     {
       "id": "felucca",
@@ -19,6 +19,26 @@
       "recipe": "bundled-sloop-port",
       "state": "enabled",
       "provenance": "bundled-browser-port"
+    },
+    {
+      "id": "waveloop",
+      "name": "WaveLoop FM-1",
+      "family": "felucca",
+      "upstream": "ELI7VH/Felucca",
+      "recipe": "upstream-felucca",
+      "state": "experimental",
+      "provenance": "upstream-source",
+      "validation": "compiled_unverified; Safari runtime pending"
+    },
+    {
+      "id": "rainbow",
+      "name": "Rainbow Mode",
+      "family": "felucca",
+      "upstream": "joshbartlettband-web/felucca-rainbow",
+      "recipe": "upstream-felucca",
+      "state": "experimental",
+      "provenance": "upstream-source",
+      "validation": "compiled_unverified; Safari runtime pending"
     }
   ],
   "candidates": [
@@ -28,20 +48,6 @@
       "state": "evaluation_needed",
       "notes": "Source/API compatibility and independent browser runtime validation required; no build recipe enabled.",
       "upstream": "ChanceTheMaker/Felucca"
-    },
-    {
-      "id": "waveloop",
-      "family": "felucca",
-      "state": "evaluation_needed",
-      "notes": "Source/API compatibility and independent browser runtime validation required; no build recipe enabled.",
-      "upstream": "ELI7VH/Felucca"
-    },
-    {
-      "id": "rainbow",
-      "family": "felucca",
-      "state": "evaluation_needed",
-      "notes": "Source/API compatibility and independent browser runtime validation required; no build recipe enabled.",
-      "upstream": "joshbartlettband-web/felucca-rainbow"
     },
     {
       "id": "floyd",

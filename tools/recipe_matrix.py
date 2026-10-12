@@ -7,11 +7,11 @@ assert data['schema_version']==1
 ids=set(); enabled=[]
 allowed={'upstream-felucca','bundled-sloop-port'}
 for item in data['recipes']:
-    assert item['id'] not in ids and item['id'] and item['state']=='enabled'
+    assert item['id'] not in ids and item['id'] and item['state'] in ('enabled','experimental')
     assert item['recipe'] in allowed, f"Unknown recipe: {item['recipe']}"
     assert '/' in item['upstream']
     ids.add(item['id'])
-    enabled.append({'id':item['id'],'name':item['name'],'recipe':item['recipe'],'source':item['upstream']})
+    enabled.append({'id':item['id'],'name':item['name'],'recipe':item['recipe'],'source':item['upstream'],'state':item['state']})
 for item in data['candidates']:
     assert item['id'] not in ids and item['state']=='evaluation_needed'
     ids.add(item['id'])

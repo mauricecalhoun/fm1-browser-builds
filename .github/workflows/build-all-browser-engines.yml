@@ -37,6 +37,7 @@ jobs:
           ENGINE_ID: ${{ matrix.id }}
           ENGINE_NAME: ${{ matrix.name }}
           RECIPE: ${{ matrix.recipe }}
+          BUILD_STATE: ${{ matrix.state }}
           UPSTREAM_REPO: ${{ matrix.source }}
         run: bash tools/ci_build_engine.sh
       - name: Publish immutable release
@@ -46,6 +47,7 @@ jobs:
           ENGINE_REV: ${{ steps.build.outputs.rev }}
           UPSTREAM_REPO: ${{ matrix.source }}
           RECIPE: ${{ matrix.recipe }}
+          BUILD_STATE: ${{ matrix.state }}
         run: |
           set -euo pipefail
           TAG="${ENGINE_ID}-web-${ENGINE_REV}"
@@ -54,7 +56,7 @@ jobs:
           else
             gh release create "$TAG" "dist/${ENGINE_ID}.fm1pkg" "dist/${ENGINE_ID}.fm1pkg.sha256" \
               --title "${ENGINE_ID} browser ${ENGINE_REV}" \
-              --notes "Browser engine build, recipe ${RECIPE}; upstream ${UPSTREAM_REPO}. Not hardware firmware."
+              --notes "Browser engine build, recipe ${RECIPE}; upstream ${UPSTREAM_REPO}. State: ${BUILD_STATE}. Not hardware firmware. Experimental builds have not been Safari validated."
           fi
   audit:
     needs: [prepare, browser-builds]
