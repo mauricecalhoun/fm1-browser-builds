@@ -22,9 +22,14 @@ case "$RECIPE" in
     ;;
   *) echo "Unsupported browser recipe: $RECIPE" >&2; exit 2;;
 esac
-for file in index.html worklet.js felucca.wasm; do
+WASM="${ENGINE_WASM:-felucca.wasm}"
+[[ "$WASM" =~ ^[A-Za-z0-9_-]+\.wasm$ ]] || { echo "Unsafe WASM filename: $WASM" >&2; exit 2; }
+for file in index.html worklet.js "$WASM"; do
   test -s "$BUILD/$file" || { echo "Missing browser asset: $BUILD/$file" >&2; exit 1; }
 done
+# Keep the native WASM name because index.html and worklet.js reference it.
+# Reject packages with dangling WASM references before publication.
+python3 tools/verify_browser_assets.py "$BUILD" --wasm "$WASM"
 python3 tools/create_package.py "$BUILD" --id "$ENGINE_ID" --name "$ENGINE_NAME" --version "$REV" --output "dist/${ENGINE_ID}.fm1pkg"
 (cd dist && sha256sum "${ENGINE_ID}.fm1pkg" > "${ENGINE_ID}.fm1pkg.sha256")
 echo "rev=$REV" >> "$GITHUB_OUTPUT"

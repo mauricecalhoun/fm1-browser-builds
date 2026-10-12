@@ -69,6 +69,50 @@
       "state": "experimental",
       "provenance": "upstream-source",
       "validation": "Safari playback confirmed by user"
+    },
+    {
+      "id": "fimba",
+      "name": "FiMba-1",
+      "family": "felucca-derived",
+      "upstream": "jadamsowers/fm1-fimba",
+      "recipe": "upstream-felucca",
+      "wasm": "kalimba.wasm",
+      "state": "experimental",
+      "provenance": "upstream-source",
+      "validation": "Compilation confirmed; Safari playback pending"
+    },
+    {
+      "id": "fomni",
+      "name": "FoMni",
+      "family": "felucca-derived",
+      "upstream": "charlesvestal/fm1-fomni",
+      "recipe": "upstream-felucca",
+      "wasm": "omni.wasm",
+      "state": "experimental",
+      "provenance": "upstream-source",
+      "validation": "Compilation confirmed; Safari playback pending"
+    },
+    {
+      "id": "fumi",
+      "name": "FuMi-1",
+      "family": "felucca-derived",
+      "upstream": "cartesive/fumi-1",
+      "recipe": "upstream-felucca",
+      "wasm": "fumi.wasm",
+      "state": "experimental",
+      "provenance": "upstream-source",
+      "validation": "Compilation confirmed; Safari playback pending"
+    },
+    {
+      "id": "x0x",
+      "name": "X0X",
+      "family": "felucca-derived",
+      "upstream": "charlesvestal/fm1-x0x",
+      "recipe": "upstream-felucca",
+      "wasm": "x0x.wasm",
+      "state": "experimental",
+      "provenance": "upstream-source",
+      "validation": "Compilation confirmed; Safari playback pending"
     }
   ],
   "candidates": [

@@ -11,7 +11,7 @@ for item in data['recipes']:
     assert item['recipe'] in allowed, f"Unknown recipe: {item['recipe']}"
     assert '/' in item['upstream']
     ids.add(item['id'])
-    enabled.append({'id':item['id'],'name':item['name'],'recipe':item['recipe'],'source':item['upstream'],'state':item['state']})
+    enabled.append({'id':item['id'],'name':item['name'],'recipe':item['recipe'],'source':item['upstream'],'state':item['state'],'wasm':item.get('wasm','felucca.wasm')})
 for item in data['candidates']:
     assert item['id'] not in ids and item['state']=='evaluation_needed'
     ids.add(item['id'])

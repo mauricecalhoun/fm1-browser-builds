@@ -1,24 +1,31 @@
-# FM-1 Firmware Lab v2.0 — Asset Recovery
+# FM-1 Firmware Lab v2.1 — Four native-WASM engines and combobox improvements
 
-Seven engines are now user-confirmed playable in Safari: Felucca, SLOOP, Rainbow, WaveLoop, GHOULBOX, JIANT FM, MAKU.
+Adds four experimental build recipes to the existing seven engines, preserving their native WASM names:
 
-This release adds **Recover four FM-1 browser builds** workflow. It runs isolated upstream builds for FiMba-1, FoMni, FuMi-1 and X0X, captures compiler logs, inventories generated `.wasm` files (regardless of filename or directory), and finds `.wasm` references in HTML/JS. A combined `fm1-four-recovery-report` artifact includes `recovery-report.json`; four per-engine artifacts include the logs, revisions and detailed inventories.
+- FiMba-1: `kalimba.wasm`
+- FoMni: `omni.wasm`
+- FuMi-1: `fumi.wasm`
+- X0X: `x0x.wasm`
 
-The four projects previously exited with status 0, but lacked the expected `build/emu/felucca.wasm`. The workflow distinguishes a genuine missing WASM from a differently named output. **It does not automatically rename, package, or publish unknown binaries.** The runtime must be verified first.
+The normal **Build all supported FM-1 browser engines** GitHub Action now compiles and packages these engines. Its build script checks that each native WASM file exists, starts with the WASM magic bytes, and is referenced by its browser HTML/worklet. Existing seven recipes default to `felucca.wasm`. The installer and release discovery logic remain unchanged. New packages still require Safari testing; no claim of runtime compatibility is made.
+
+The firmware combobox opens the **full list on click or focus**, supports typing to filter, and uses a centered SVG chevron instead of a font glyph.
 
 ## Install
-Unzip into the existing `mauricecalhoun/fm1-browser-builds` checkout, preserving `.github`. Run:
 
-```bash
+Extract into your existing `mauricecalhoun/fm1-browser-builds` checkout (do not replace the repository `.git` folder). Then:
+
+```sh
 python3 tools/recipe_matrix.py --validate
 git add -A
-git commit -m "Add v2.0 four-engine WASM recovery diagnostics"
+git commit -m "Add four native-WASM browser engines and fix combobox"
 git push origin main
 ```
 
-Open GitHub Actions > **Recover four FM-1 browser builds** > **Run workflow**. Download `fm1-four-recovery-report` and upload `recovery-report.json` here, ideally with one of the detailed per-engine artifacts if a WASM is discovered under an unexpected name.
+From GitHub Actions, run **Build all supported FM-1 browser engines**. After the four new experimental releases are published, open the Lab, select each firmware, click **Install**, then **Play in Lab**. Safari playback and controls must be verified before marking any new engine as confirmed playable.
 
 ## Notes
-- No change to the seven published build recipes or existing browser player.
-- Existing diagnostic workflow remains available.
-- Compile success and WASM discovery do not imply Safari compatibility.
+
+- Existing seven engines and package schema are preserved.
+- Upstream firmware source is cloned and built in GitHub Actions; no precompiled WASM is included in this ZIP.
+- A successful GitHub build is not a guarantee that audio starts in Safari.

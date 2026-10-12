@@ -38,6 +38,7 @@ jobs:
           ENGINE_NAME: ${{ matrix.name }}
           RECIPE: ${{ matrix.recipe }}
           BUILD_STATE: ${{ matrix.state }}
+          ENGINE_WASM: ${{ matrix.wasm }}
           UPSTREAM_REPO: ${{ matrix.source }}
         run: bash tools/ci_build_engine.sh
       - name: Publish immutable release
@@ -48,6 +49,7 @@ jobs:
           UPSTREAM_REPO: ${{ matrix.source }}
           RECIPE: ${{ matrix.recipe }}
           BUILD_STATE: ${{ matrix.state }}
+          ENGINE_WASM: ${{ matrix.wasm }}
         run: |
           set -euo pipefail
           TAG="${ENGINE_ID}-web-${ENGINE_REV}"
