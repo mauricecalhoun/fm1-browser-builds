@@ -1,3 +1,16 @@
+# FM-1 Firmware Lab v1.5 — Candidate compatibility probes
+
+This release adds `.github/workflows/evaluate-candidates.yml` and `tools/probe_candidate.py`. Existing Felucca and SLOOP publishing workflows and UI remain unchanged.
+
+**What it does:** Checks out all six candidate upstream repositories, records source SHA and expected browser build layout. For manual runs with compile probes enabled, attempts to generate and compile browser assets only when compatible build entrypoints exist. It captures logs and reports `needs_adaptation`, `build_failed`, or `compiled_unverified`.
+
+**Security:** The workflow executes third-party source scripts when compilation is enabled. It runs on GitHub-hosted disposable runners with read-only repository permissions, checkout credentials disabled, and no application secrets supplied. Review upstream sources before enabling probes for untrusted repositories. Scheduled runs perform static inspection only.
+
+**Important:** Even `compiled_unverified` means *not yet installable*. This workflow does not publish any release or alter enabled recipes. Browser runtime/Safari testing is still required.
+
+## Deploy
+Copy the project files (including hidden `.github`) to your existing `fm1-browser-builds` clone, commit and push. Run **Evaluate FM-1 firmware family candidates** from Actions. After completion download `fm1-candidate-compatibility` artifact and share the JSON report.
+
 # FM-1 Firmware Lab v1.4 — Declarative browser build recipes
 
 This release replaces the hard-coded GitHub Actions build matrix with `recipes.json`.

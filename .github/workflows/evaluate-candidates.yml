@@ -1,0 +1,83 @@
+name: Evaluate FM-1 firmware family candidates
+on:
+  workflow_dispatch:
+    inputs:
+      run_compile_probes:
+        description: "Run upstream browser build scripts in isolated CI (untrusted code)"
+        type: boolean
+        default: true
+  schedule:
+    - cron: '23 9 * * 1'
+permissions:
+  contents: read
+jobs:
+  prepare:
+    runs-on: ubuntu-24.04
+    outputs:
+      matrix: ${{ steps.matrix.outputs.value }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Candidate matrix
+        id: matrix
+        run: |
+          echo "value=$(python3 -c 'import json; d=json.load(open("recipes.json")); print(json.dumps({"include":[{"id":c["id"]} for c in d["candidates"]]},separators=(",",":")))')" >> "$GITHUB_OUTPUT"
+  probe:
+    needs: prepare
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.prepare.outputs.matrix) }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install dependencies for browser compile probes
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.run_compile_probes }}
+        run: python3 -m pip install --break-system-packages Pillow fonttools
+      - name: Install Emscripten
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.run_compile_probes }}
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: '4.0.10'
+      - name: Inspect upstream and optionally compile
+        env:
+          CANDIDATE_ID: ${{ matrix.id }}
+          DO_PROBE: ${{ github.event_name == 'workflow_dispatch' && inputs.run_compile_probes }}
+        run: |
+          if [ "$DO_PROBE" = 'true' ]; then
+            python3 tools/probe_candidate.py --id "$CANDIDATE_ID" --probe
+          else
+            python3 tools/probe_candidate.py --id "$CANDIDATE_ID"
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: candidate-${{ matrix.id }}
+          path: |
+            dist/candidate-probes/${{ matrix.id }}.json
+            dist/candidate-probes/${{ matrix.id }}.log
+          if-no-files-found: warn
+  report:
+    needs: probe
+    if: always()
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: candidate-*
+          path: candidate-results
+          merge-multiple: true
+      - name: Merge compatibility results
+        run: python3 tools/merge_candidate_probes.py candidate-results dist/candidate-compatibility.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fm1-candidate-compatibility
+          path: dist/candidate-compatibility.json
