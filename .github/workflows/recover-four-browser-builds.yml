@@ -36,8 +36,7 @@ jobs:
           clone_status=$?
           if [ "$clone_status" -ne 0 ]; then
             echo "clone_exit_code=$clone_status" >> "dist/recovery/${TARGET_ID}.log"
-            printf '{"id":"%s","status":"clone_failed","clone_exit_code":%s}
-' "$TARGET_ID" "$clone_status" > "dist/recovery/${TARGET_ID}.json"
+            printf '{"id":"%s","status":"clone_failed","clone_exit_code":%s}\n' "$TARGET_ID" "$clone_status" > "dist/recovery/${TARGET_ID}.json"
           else
             git -C upstream rev-parse HEAD > "dist/recovery/${TARGET_ID}.revision"
             (cd upstream && python3 -c 'from tools.build import generate; generate()' && sh web/emu/build.sh) >> "dist/recovery/${TARGET_ID}.log" 2>&1
