@@ -1,0 +1,71 @@
+name: Recover four FM-1 browser builds
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  recover:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { id: fimba, upstream: jadamsowers/fm1-fimba }
+          - { id: fomni, upstream: charlesvestal/fm1-fomni }
+          - { id: fumi, upstream: cartesive/fumi-1 }
+          - { id: x0x, upstream: charlesvestal/fm1-x0x }
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install build dependencies
+        run: python3 -m pip install --break-system-packages Pillow fonttools
+      - uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: '4.0.10'
+      - name: Compile and inspect browser outputs
+        env:
+          TARGET_ID: ${{ matrix.id }}
+          UPSTREAM: ${{ matrix.upstream }}
+        shell: bash
+        run: |
+          set -uo pipefail
+          mkdir -p dist/recovery
+          git clone --depth 1 "https://github.com/${UPSTREAM}.git" upstream > "dist/recovery/${TARGET_ID}.log" 2>&1
+          clone_status=$?
+          if [ "$clone_status" -ne 0 ]; then
+            echo "clone_exit_code=$clone_status" >> "dist/recovery/${TARGET_ID}.log"
+            printf '{"id":"%s","status":"clone_failed","clone_exit_code":%s}
+' "$TARGET_ID" "$clone_status" > "dist/recovery/${TARGET_ID}.json"
+          else
+            git -C upstream rev-parse HEAD > "dist/recovery/${TARGET_ID}.revision"
+            (cd upstream && python3 -c 'from tools.build import generate; generate()' && sh web/emu/build.sh) >> "dist/recovery/${TARGET_ID}.log" 2>&1
+            build_status=$?
+            echo "build_exit_code=$build_status" >> "dist/recovery/${TARGET_ID}.log"
+            python3 tools/diagnose_browser_assets.py upstream --id "$TARGET_ID" --build-exit-code "$build_status" --output "dist/recovery/${TARGET_ID}.json" >> "dist/recovery/${TARGET_ID}.log" 2>&1
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: fm1-recovery-${{ matrix.id }}
+          path: dist/recovery/
+          if-no-files-found: error
+  report:
+    needs: recover
+    if: always()
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: fm1-recovery-*
+          path: dist/recovery-results
+          merge-multiple: true
+      - name: Summarize all four
+        run: python3 tools/merge_recovery.py dist/recovery-results --output dist/recovery-report.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fm1-four-recovery-report
+          path: dist/recovery-report.json
+          if-no-files-found: error

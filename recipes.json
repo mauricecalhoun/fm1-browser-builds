@@ -48,7 +48,7 @@
       "recipe": "upstream-felucca",
       "state": "experimental",
       "provenance": "upstream-source",
-      "validation": "compiled_unverified; Safari runtime pending"
+      "validation": "Safari playback confirmed by user"
     },
     {
       "id": "jiant",
@@ -58,7 +58,7 @@
       "recipe": "upstream-felucca",
       "state": "experimental",
       "provenance": "upstream-source",
-      "validation": "compiled_unverified; Safari runtime pending"
+      "validation": "Safari playback confirmed by user"
     },
     {
       "id": "maku",
@@ -68,7 +68,7 @@
       "recipe": "upstream-felucca",
       "state": "experimental",
       "provenance": "upstream-source",
-      "validation": "compiled_unverified; Safari runtime pending"
+      "validation": "Safari playback confirmed by user"
     }
   ],
   "candidates": [
