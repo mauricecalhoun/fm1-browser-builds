@@ -17,7 +17,7 @@ def github_repo(firmware_id):
     # Only repos advertised by the live Hub; no arbitrary URL proxy.
     if not re.fullmatch(r'[a-zA-Z0-9_-]{1,64}', firmware_id):
         raise ValueError('Invalid firmware ID')
-    request = Request(CATALOG_URL, headers={'User-Agent':'FM1-Firmware-Lab/0.9.5'})
+    request = Request(CATALOG_URL, headers={'User-Agent':'FM1-Firmware-Lab/1.3'})
     with urlopen(request, timeout=10) as response:
         catalog = json.loads(response.read(1024*1024))
     item = next((f for f in catalog.get('firmwares',[]) if f.get('id')==firmware_id),None)
@@ -39,7 +39,7 @@ class Handler(SimpleHTTPRequestHandler):
     def github_release(self, firmware_id):
         upstream=github_repo(firmware_id)
         repo=BUILD_REPO if re.fullmatch(r'[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+', BUILD_REPO) else upstream
-        request=Request(f'https://api.github.com/repos/{repo}/releases?per_page=30',headers={'User-Agent':'FM1-Firmware-Lab/0.9.5','Accept':'application/vnd.github+json'})
+        request=Request(f'https://api.github.com/repos/{repo}/releases?per_page=30',headers={'User-Agent':'FM1-Firmware-Lab/1.3','Accept':'application/vnd.github+json'})
         with urlopen(request,timeout=12) as response:
             releases=json.loads(response.read(1024*1024))
         for release in releases:
@@ -49,14 +49,14 @@ class Handler(SimpleHTTPRequestHandler):
             for pkg in packages:
                 checksum=next((a for a in assets if a.get('name')==pkg['name']+'.sha256'),None)
                 if checksum:
-                    return {'available':True,'repo':repo,'version':release.get('tag_name',''), 'package_asset_id':pkg['id'],'checksum_asset_id':checksum['id'],'size':pkg.get('size',0)}
+                    return {'available':True,'repo':repo,'version':release.get('tag_name',''), 'published_at':release.get('published_at'), 'release_url':release.get('html_url'), 'recipe':('upstream-felucca' if firmware_id=='felucca' else 'bundled-sloop-port' if firmware_id=='sloop' else 'unknown'), 'upstream':upstream, 'package_asset_id':pkg['id'],'checksum_asset_id':checksum['id'],'size':pkg.get('size',0)}
         return {'available':False,'repo':repo,'reason':'Browser port needed: no compatible package published for this firmware. Hardware .fwsc images cannot run in Safari.'}
     def github_asset(self,firmware_id,asset_id,limit):
         info=self.github_release(firmware_id)
         repo=info['repo']
         if not info.get('available') or asset_id not in (info['package_asset_id'],info['checksum_asset_id']):
             raise ValueError('Asset not in approved browser release')
-        req=Request(f'https://api.github.com/repos/{repo}/releases/assets/{asset_id}',headers={'User-Agent':'FM1-Firmware-Lab/0.9.5','Accept':'application/octet-stream','X-GitHub-Api-Version':'2022-11-28'})
+        req=Request(f'https://api.github.com/repos/{repo}/releases/assets/{asset_id}',headers={'User-Agent':'FM1-Firmware-Lab/1.3','Accept':'application/octet-stream','X-GitHub-Api-Version':'2022-11-28'})
         with urlopen(req,timeout=30) as response:
             raw=response.read(limit+1)
             if len(raw)>limit:raise ValueError('Asset exceeds limit')
