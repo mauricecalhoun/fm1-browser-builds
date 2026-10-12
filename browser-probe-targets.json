@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "targets": [
+    {
+      "id": "ghoulbox",
+      "name": "GHOULBOX",
+      "upstream": "jasonpersinger/ghoulbox-fm1-dungeon-synth",
+      "audited_revision": "8081206b951353b8d04886eeae615feb18123ef5"
+    },
+    {
+      "id": "x0x",
+      "name": "X0X",
+      "upstream": "charlesvestal/fm1-x0x",
+      "audited_revision": "47f8e4c4ad602591b81c21bc5480db7a94f6d6af"
+    },
+    {
+      "id": "fomni",
+      "name": "FoMni",
+      "upstream": "charlesvestal/fm1-fomni",
+      "audited_revision": "405ef41aef75f7e70afd6decc01505df07c708e9"
+    },
+    {
+      "id": "fimba",
+      "name": "FiMba-1",
+      "upstream": "jadamsowers/fm1-fimba",
+      "audited_revision": "b2b647b91bb3e9f0014529a468eeb6ac65f90ad9"
+    },
+    {
+      "id": "jiant",
+      "name": "JIANT FM",
+      "upstream": "juanjiant-bit/JIANT",
+      "audited_revision": "27dbbd011d614ad4bfa409ccbec82a4ec0edf0d1"
+    },
+    {
+      "id": "fumi",
+      "name": "FuMi-1",
+      "upstream": "cartesive/fumi-1",
+      "audited_revision": "c83d2c4ab1d8a2c8e0b6d5aabe8d9bf2dd81896d"
+    },
+    {
+      "id": "maku",
+      "name": "MAKU",
+      "upstream": "okumurari2/maku",
+      "audited_revision": "64cb7e4bc426d308185baf7d577a336968632657"
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+name: Probe seven browser-ready FM-1 sources
+on:
+  workflow_dispatch:
+    inputs:
+      compile:
+        description: 'Run upstream build scripts (untrusted code on disposable runners)'
+        type: boolean
+        default: true
+permissions:
+  contents: read
+jobs:
+  prepare:
+    runs-on: ubuntu-24.04
+    outputs:
+      matrix: ${{ steps.matrix.outputs.value }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - id: matrix
+        run: |
+          echo "value=$(python3 -c 'import json; d=json.load(open("browser-probe-targets.json")); print(json.dumps({"include":[{"id":x["id"]} for x in d["targets"]]},separators=(",",":")))')" >> "$GITHUB_OUTPUT"
+  probe:
+    needs: prepare
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.prepare.outputs.matrix) }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install browser build dependencies
+        if: ${{ inputs.compile }}
+        run: python3 -m pip install --break-system-packages Pillow fonttools
+      - name: Install Emscripten
+        if: ${{ inputs.compile }}
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: '4.0.10'
+      - name: Run isolated compile probe
+        env:
+          TARGET_ID: ${{ matrix.id }}
+          COMPILE: ${{ inputs.compile }}
+        run: |
+          if [ "$COMPILE" = 'true' ]; then
+            python3 tools/probe_browser_ready.py --id "$TARGET_ID" --compile
+          else
+            python3 tools/probe_browser_ready.py --id "$TARGET_ID"
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: browser-probe-${{ matrix.id }}
+          path: |
+            dist/browser-probes/${{ matrix.id }}.json
+            dist/browser-probes/${{ matrix.id }}.log
+          if-no-files-found: error
+  report:
+    needs: probe
+    if: always()
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: browser-probe-*
+          path: browser-probe-results
+          merge-multiple: true
+      - name: Merge and validate seven results
+        run: python3 tools/merge_browser_probes.py browser-probe-results dist/browser-probe-report.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fm1-seven-browser-probe-report
+          path: dist/browser-probe-report.json
+          if-no-files-found: error

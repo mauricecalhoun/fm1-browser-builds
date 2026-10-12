@@ -31,3 +31,21 @@ The workflow checks all entries in the live firmware catalog, preserves the four
 Classification: `browser_build_detected` means a known browser build layout exists (not compiled or tested); `family_adapter_review` means a family-specific port may be reusable (not confirmed); `new_browser_port_required` means no known family adapter; `source_unavailable` means the clone failed.
 
 This workflow does not execute upstream build scripts, publish packages, or change existing playable engines. The source-audit step requires internet access and can fail if upstream repositories are unavailable.
+
+
+## v1.8 — Seven browser-build compile probes
+
+The v1.7 audit identified seven repositories with browser build entrypoints.
+`browser-probe-targets.json` records the repository and audited revision for each.
+The new GitHub Actions workflow **Probe seven browser-ready FM-1 sources**
+checks out each upstream repo on a disposable runner, optionally executes its browser
+build, checks `index.html`, `worklet.js`, and `felucca.wasm`, and uploads logs plus
+a strict seven-result summary artifact `fm1-seven-browser-probe-report`.
+
+The workflow **does not publish or install** any candidate. Compiling is not Safari validation.
+The source revision is recorded, and drift since the audit is flagged.
+To run: copy this project into your existing `fm1-browser-builds` repository, push,
+then Actions → Probe seven browser-ready FM-1 sources → Run workflow (compile enabled).
+Download the report artifact and upload `browser-probe-report.json` to this chat.
+
+The existing four engine recipes and browser Lab remain unchanged.
