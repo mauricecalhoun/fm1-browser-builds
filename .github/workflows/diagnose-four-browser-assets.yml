@@ -1,0 +1,48 @@
+name: Diagnose four FM-1 browser asset builds
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { id: fimba, upstream: jadamsowers/fm1-fimba }
+          - { id: fomni, upstream: charlesvestal/fm1-fomni }
+          - { id: fumi, upstream: cartesive/fumi-1 }
+          - { id: x0x, upstream: charlesvestal/fm1-x0x }
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - run: python3 -m pip install --break-system-packages Pillow fonttools
+      - uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: '4.0.10'
+      - name: Build upstream and inventory outputs
+        env:
+          TARGET_ID: ${{ matrix.id }}
+          UPSTREAM: ${{ matrix.upstream }}
+        run: |
+          set -uo pipefail
+          mkdir -p dist/diagnostics
+          git clone --depth 1 "https://github.com/${UPSTREAM}.git" upstream
+          clone_status=$?
+          if [ "$clone_status" -eq 0 ]; then
+            (cd upstream && python3 -c 'from tools.build import generate; generate()' && sh web/emu/build.sh) > "dist/diagnostics/${TARGET_ID}.log" 2>&1
+            build_status=$?
+            echo "build_exit_code=$build_status" >> "dist/diagnostics/${TARGET_ID}.log"
+            python3 tools/diagnose_browser_assets.py upstream --id "$TARGET_ID" --output "dist/diagnostics/${TARGET_ID}.json"
+          else
+            echo "git clone failed: $clone_status" > "dist/diagnostics/${TARGET_ID}.log"
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: browser-diagnostic-${{ matrix.id }}
+          path: dist/diagnostics/
+          if-no-files-found: warn

@@ -49,3 +49,14 @@ then Actions → Probe seven browser-ready FM-1 sources → Run workflow (compil
 Download the report artifact and upload `browser-probe-report.json` to this chat.
 
 The existing four engine recipes and browser Lab remain unchanged.
+
+
+## v1.9 — publish three + diagnose four
+
+The existing **Build all supported FM-1 browser engines** workflow now includes experimental recipes for GHOULBOX, JIANT FM, and MAKU. They were compiled in the v1.8 probe but are **not Safari-verified**. The existing workflow builds, packages, checksums, and publishes immutable release assets.
+
+Run **Diagnose four FM-1 browser asset builds** to inspect FiMba-1, FoMni, FuMi-1, and X0X. This workflow inventories actual build outputs, especially alternate WASM filenames and paths. It does not publish or silently rename files.
+
+**Security:** GitHub Actions executes third-party build code on disposable hosted runners. Review source and workflow permissions before dispatch; avoid self-hosted runners and credentials.
+
+**Deployment:** Copy this ZIP over your current repository (including `.github`), commit and push. Run the two workflows. Test each experimental published engine in Safari before declaring support.

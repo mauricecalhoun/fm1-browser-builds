@@ -28,13 +28,43 @@
       "recipe": "upstream-felucca",
       "state": "experimental",
       "provenance": "upstream-source",
-      "validation": "compiled_unverified; Safari runtime pending"
+      "validation": "Safari playback confirmed by user"
     },
     {
       "id": "rainbow",
       "name": "Rainbow Mode",
       "family": "felucca",
       "upstream": "joshbartlettband-web/felucca-rainbow",
+      "recipe": "upstream-felucca",
+      "state": "experimental",
+      "provenance": "upstream-source",
+      "validation": "Safari playback confirmed by user"
+    },
+    {
+      "id": "ghoulbox",
+      "name": "GHOULBOX",
+      "family": "felucca-compatible",
+      "upstream": "jasonpersinger/ghoulbox-fm1-dungeon-synth",
+      "recipe": "upstream-felucca",
+      "state": "experimental",
+      "provenance": "upstream-source",
+      "validation": "compiled_unverified; Safari runtime pending"
+    },
+    {
+      "id": "jiant",
+      "name": "JIANT FM",
+      "family": "felucca-compatible",
+      "upstream": "juanjiant-bit/JIANT",
+      "recipe": "upstream-felucca",
+      "state": "experimental",
+      "provenance": "upstream-source",
+      "validation": "compiled_unverified; Safari runtime pending"
+    },
+    {
+      "id": "maku",
+      "name": "MAKU",
+      "family": "felucca-compatible",
+      "upstream": "okumurari2/maku",
       "recipe": "upstream-felucca",
       "state": "experimental",
       "provenance": "upstream-source",
