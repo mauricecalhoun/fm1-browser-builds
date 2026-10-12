@@ -26,37 +26,43 @@
       "id": "salt",
       "family": "felucca",
       "state": "evaluation_needed",
-      "notes": "Source/API compatibility and independent browser runtime validation required; no build recipe enabled."
+      "notes": "Source/API compatibility and independent browser runtime validation required; no build recipe enabled.",
+      "upstream": "ChanceTheMaker/Felucca"
     },
     {
       "id": "waveloop",
       "family": "felucca",
       "state": "evaluation_needed",
-      "notes": "Source/API compatibility and independent browser runtime validation required; no build recipe enabled."
+      "notes": "Source/API compatibility and independent browser runtime validation required; no build recipe enabled.",
+      "upstream": "ELI7VH/Felucca"
     },
     {
       "id": "rainbow",
       "family": "felucca",
       "state": "evaluation_needed",
-      "notes": "Source/API compatibility and independent browser runtime validation required; no build recipe enabled."
+      "notes": "Source/API compatibility and independent browser runtime validation required; no build recipe enabled.",
+      "upstream": "joshbartlettband-web/felucca-rainbow"
     },
     {
       "id": "floyd",
       "family": "sloop",
       "state": "evaluation_needed",
-      "notes": "Source/API compatibility and independent browser runtime validation required; no build recipe enabled."
+      "notes": "Source/API compatibility and independent browser runtime validation required; no build recipe enabled.",
+      "upstream": "renebohne/sloop-fm1"
     },
     {
       "id": "sloopbanks",
       "family": "sloop",
       "state": "evaluation_needed",
-      "notes": "Source/API compatibility and independent browser runtime validation required; no build recipe enabled."
+      "notes": "Source/API compatibility and independent browser runtime validation required; no build recipe enabled.",
+      "upstream": "majnikool/sloop-fm1"
     },
     {
       "id": "sloopdx",
       "family": "sloop",
       "state": "evaluation_needed",
-      "notes": "Source/API compatibility and independent browser runtime validation required; no build recipe enabled."
+      "notes": "Source/API compatibility and independent browser runtime validation required; no build recipe enabled.",
+      "upstream": "zvenson/dxsloop"
     }
   ]
 }

@@ -1,3 +1,7 @@
+## v1.5.1 — candidate probe fix
+
+Fixed candidate lookup: recipes.json now carries upstream repository names for all six candidate IDs, instead of looking up mismatched IDs in the 18-entry bundled catalog. Missing probe artifacts now fail the workflow and incomplete reports fail validation. No candidate packages are published by this evaluation.
+
 # FM-1 Firmware Lab v1.5 — Candidate compatibility probes
 
 This release adds `.github/workflows/evaluate-candidates.yml` and `tools/probe_candidate.py`. Existing Felucca and SLOOP publishing workflows and UI remain unchanged.

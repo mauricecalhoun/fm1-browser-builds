@@ -22,11 +22,11 @@ def main():
     a=p.parse_args()
     data=json.loads((ROOT/'recipes.json').read_text())
     candidate=next((c for c in data['candidates'] if c['id']==a.id),None)
-    catalog=json.loads((ROOT/'catalog.json').read_text())
-    firmware=next((f for f in catalog['firmwares'] if f['id']==a.id),None)
-    if not candidate or not firmware: p.error('Unknown candidate')
-    repo=firmware.get('repo','').replace('https://github.com/','').strip('/')
-    if not repo or '/' not in repo: p.error('Candidate missing upstream repo')
+    if not candidate:
+        p.error(f"Unknown candidate: {a.id}. Check recipes.json candidates")
+    repo=candidate.get('upstream', '').replace('https://github.com/', '').strip('/')
+    if not repo or '/' not in repo:
+        p.error(f"Candidate {a.id} missing upstream repo in recipes.json")
     out=ROOT/'dist'/'candidate-probes'; out.mkdir(parents=True,exist_ok=True)
     source=out/('source-'+a.id)
     result={'id':a.id,'family':candidate['family'],'upstream':repo,'source_revision':None,'structural_checks':{},'probe_attempted':False,'build_exit_code':None,'browser_assets':{},'status':'source_unavailable','reason':None}

@@ -61,7 +61,7 @@ jobs:
           path: |
             dist/candidate-probes/${{ matrix.id }}.json
             dist/candidate-probes/${{ matrix.id }}.log
-          if-no-files-found: warn
+          if-no-files-found: error
   report:
     needs: probe
     if: always()
